@@ -62,6 +62,48 @@ if not has_paid(username):
 
     if st.button("Make Payment (₦50)"):
         pay_url = f"https://paystack.com/pay/lasuscreeningdemo"
+import streamlit as st
+import pandas as pd
+import requests
+import uuid
+import datetime
+import os
+
+# --- Payment Tracking ---
+PAYMENT_FILE = "payments.csv"
+
+def has_paid(reference):
+    if not os.path.exists(PAYMENT_FILE):
+        return False
+    df = pd.read_csv(PAYMENT_FILE)
+    return reference in df['reference'].values
+
+def save_payment(reference, name):
+    df = pd.DataFrame([{'reference': reference, 'name': name, 'timestamp': datetime.datetime.now()}])
+    if os.path.exists(PAYMENT_FILE):
+        df_existing = pd.read_csv(PAYMENT_FILE)
+        df = pd.concat([df_existing, df], ignore_index=True)
+    df.to_csv(PAYMENT_FILE, index=False)
+
+# --- Paystack Integration ---
+paystack_secret_key = "sk_test_85609a6429e8461d30182a74c4c33ae357090e52"
+paystack_public_key = "pk_test_d351927aa0cc3bfdefc245a3b51a2ee3ed62e424"
+
+st.title("LASU Screening Score Calculator")
+
+name_input = st.text_input("Full Name")
+jamb_number = st.text_input("JAMB Registration Number")
+course = st.text_input("Course of Interest")
+email = st.text_input("Email for payment receipt")
+
+st.markdown("---")
+
+reference = str(uuid.uuid4())
+
+if not has_paid(reference):
+    st.info("You need to make a ₦50 payment to continue.")
+    if st.button("Generate Paystack Payment Link"):
+        pay_url = f"https://paystack.com/pay/lasuscreeningdemo"  # Replace with your real pay link
         st.markdown(f"""
             <a href="{pay_url}" target="_blank">
                 <button style='background-color:green;color:white;padding:10px;border:none;border-radius:5px;'>
@@ -85,7 +127,7 @@ if not has_paid(username):
             res = response.json()
             if res['status'] and res['data']['status'] == 'success':
                 st.success("Payment verified successfully.")
-                save_payment(username)
+                save_payment(verified, name_input)
             else:
                 st.error("Payment verification failed. Try again.")
                 st.stop()
@@ -93,12 +135,6 @@ if not has_paid(username):
         st.stop()
 
 # --- Main Screening App ---
-st.title("LASU Screening Score Calculator")
-
-name_input = st.text_input("Full Name")
-jamb_number = st.text_input("JAMB Registration Number")
-course = st.text_input("Course of Interest")
-
 st.header("Enter your JAMB scores (English + 3 other subjects)")
 jamb_scores = {}
 for i in range(4):
