@@ -39,7 +39,7 @@ reference = str(uuid.uuid4())
 if not has_paid(reference):
     st.info("You need to make a ₦50 payment to continue.")
     if st.button("Generate Paystack Payment Link"):
-        pay_url = f"https://paystack.com/pay/lasuscreeningdemo"  # Replace with your real pay link
+        pay_url = f"https://paystack.shop/pay/rmtofulxl5"  # Replace with your real pay link
         st.markdown(f"""
             <a href="{pay_url}" target="_blank">
                 <button style='background-color:green;color:white;padding:10px;border:none;border-radius:5px;'>
