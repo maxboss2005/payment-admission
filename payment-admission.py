@@ -37,7 +37,7 @@ st.markdown("---")
 reference = str(uuid.uuid4())
 
 if not has_paid(reference):
-    st.info("You need to make a ₦50 payment to continue.")
+    st.info("You need to make a ₦100 payment to continue.")
     if st.button("Generate Paystack Payment Link"):
         pay_url = f"https://paystack.shop/pay/rmtofulxl5"  # Replace with your real pay link
         st.markdown(f"""
