@@ -43,7 +43,7 @@ if not has_paid(reference):
         st.markdown(f"""
             <a href="{pay_url}" target="_blank">
                 <button style='background-color:green;color:white;padding:10px;border:none;border-radius:5px;'>
-                    Click to Pay ₦50
+                    Click to Pay ₦100
                 </button>
             </a>
         """, unsafe_allow_html=True)
